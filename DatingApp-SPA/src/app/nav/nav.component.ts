@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AlertifyService } from '../_services/alertify.service';
 import { AuthService } from '../_services/auth.service';
 
@@ -14,7 +15,8 @@ export class NavComponent implements OnInit {
 
   constructor(
     public authService: AuthService,
-    private alertify: AlertifyService
+    private alertify: AlertifyService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -25,11 +27,14 @@ export class NavComponent implements OnInit {
     this.authService.login(this.model).subscribe(
       (next) => {
         this.alertify.success('Logged in succsessfully');
+        // this.router.navigate(['/members']);
       },
       (error) => {
         console.log(error);
         this.alertify.error(error);
-      }
+      }, () => {
+        this.router.navigate(['/members'])
+      }      
     );
   }
 
@@ -40,5 +45,6 @@ export class NavComponent implements OnInit {
   onLogout() {
     localStorage.removeItem('token');
     this.alertify.message('Logged Out');
+    this.router.navigate(['/home']);
   }
 }
